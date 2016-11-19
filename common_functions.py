@@ -87,6 +87,7 @@ def get_sum_of_squared_errors(data_training, target_data, weights_matrix, basis_
 def calculate_sgd_values(training_data, target_matrix, basis_matrix_training, m):
     lambda_sgd = 0.1
     minimum_e_rms = 100
+    minimum_lambda = 0
     for r in range(0, 10):
         sgd_weight_matrix = numpy.random.random(m)
         sgd_weight_matrix = numpy.array(sgd_weight_matrix)
@@ -102,11 +103,14 @@ def calculate_sgd_values(training_data, target_matrix, basis_matrix_training, m)
             value = 'lambda:' + str(round(lambda_sgd, 2)) + ' ' + 'learning_rate:' + str(learning_rate) + ' ' + 'E_RMS:' + str(current_e_rms) + 'iteration_no:' + str(no_of_iteration) + ' ' + 'M:' + str(m)
             # print(value)
             no_of_iteration += 1
+            with open('SGD_Observations_synthetic.txt', "a") as fw:
+                fw.write('lambda_sgd:' + str(round(lambda_sgd,2)) + ',' + 'ERMS:' + str(current_e_rms) + ',' + 'M:' + str(m)+'\n')
             if no_of_iteration > 50:
                 break
             if current_e_rms < minimum_e_rms:
                 minimum_weights_matrix = sgd_weight_matrix
                 minimum_e_rms = current_e_rms
+                minimum_lambda =  lambda_sgd
             if last_e_rms - current_e_rms < 0.001:
                 break
             if current_e_rms > last_e_rms:
@@ -120,4 +124,4 @@ def calculate_sgd_values(training_data, target_matrix, basis_matrix_training, m)
             sgd_weight_matrix_updated = sgd_weight_matrix + (-learning_rate * delta_e)
             sgd_weight_matrix = sgd_weight_matrix_updated
         lambda_sgd += 0.1
-    return minimum_e_rms
+    return minimum_e_rms,minimum_lambda

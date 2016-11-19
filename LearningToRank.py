@@ -3,7 +3,7 @@
 from random import randint
 from common_functions import *
 
-M = 5
+M = 10
 
 
 def calculate_values_letor():
@@ -71,8 +71,8 @@ def calculate_values_letor():
                                                                                                len(validation_data), 'letor', 'validation')
         print('Values for LETOR data set ')
         print('--------------------------------------------------------------')
-        print('Minimum ERMS value for training  data is ', e_rms_training)
-        print('Minimum ERMS value for validation data is ', e_rms_validation)
+        print('Minimum ERMS value for training  data is ', e_rms_training, 'lambda=', str(round(lambda_training,2)), 'M= ', str(M))
+        print('Minimum ERMS value for validation data is ', e_rms_validation, 'lambda=', str(round(lambda_validation,2)), 'M= ', str(M))
         # test set calculation
         starting_index = len(training_data) + len(validation_data)
         covariance_matrix = calculate_covarincematrix(testing_data, 46)
@@ -92,18 +92,18 @@ def calculate_values_letor():
         error_sum += (round(lambda_val, 1) * 0.5) * numpy.dot(weight_matrix.T, weight_matrix)
         term = (2 * error_sum) / size_testing_data
         e_rms_value = math.sqrt(term)
-        print('Minimum ERMS value for testing data is ', e_rms_value)
+        print('Minimum ERMS value for testing data is ', e_rms_value, 'lambda=', str(round(lambda_validation,2)), 'M= ', str(M))
 
         # SGD Calculation
         # training data
 
-        minimum_e_rms_training = calculate_sgd_values(training_data, target_matrix[0:len(training_data)-1], basis_matrix_training, M)
-        print('Minimum e_rms value for SGD over training set is ', minimum_e_rms_training)
+        minimum_e_rms_training,min_sgd_lambda = calculate_sgd_values(training_data, target_matrix[0:len(training_data)-1], basis_matrix_training, M)
+        print('Minimum e_rms value for SGD over training set is ', minimum_e_rms_training, 'at lambda = ', str(round(min_sgd_lambda,2)), 'M=', M)
 
-        minimum_e_rms_validation = calculate_sgd_values(validation_data, target_matrix_validation, matrix_basis_validation, M)
-        print('Minimum e_rms value for SGD over validation set is ', minimum_e_rms_validation)
+        minimum_e_rms_validation,min_sgd_lambda = calculate_sgd_values(validation_data, target_matrix_validation, matrix_basis_validation, M)
+        print('Minimum e_rms value for SGD over validation set is ', minimum_e_rms_validation, 'at lambda = ',  str(round(min_sgd_lambda,2)), 'M=', M)
 
         target_matrix_testing = target_matrix[starting_index:len(target_matrix)-1]
-        minimum_e_rms_testing = calculate_sgd_values(testing_data, target_matrix_testing, matrix_basis_testing, M)
-        print('Minimum e_rms value for SGD over testing set  is ', minimum_e_rms_testing)
+        minimum_e_rms_testing,min_sgd_lambda = calculate_sgd_values(testing_data, target_matrix_testing, matrix_basis_testing, M)
+        print('Minimum e_rms value for SGD over testing set  is ', minimum_e_rms_testing, 'at lambda = ', str(round(min_sgd_lambda,2)), 'M=', M)
         print('------------------------------------------------------------------')
