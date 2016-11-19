@@ -55,16 +55,7 @@ def calculate_least_error_values(matrix_basis_training, m, target_matrix, size, 
         term = (2 * error_sum) / size
         e_rms_value = math.sqrt(term)
         e_rms_values.append(e_rms_value)
-        if type_set == 'validation':
-            file_name = ''
-            if set_name == 'letor':
-                file_name = 'letor_observations.txt'
-            else:
-                file_name = 'synthetic_observation.txt'
-            with open(file_name, "a") as file:
-                value = "M:" + str(m) + ',' + "E_RMS:" + str(e_rms_value) + ',' + 'lambda:' + str(
-                    round(lambda_val, 2)) + '\n'
-                file.write(value)
+
         if e_rms_value < min_rms_value:
             min_rms_value = e_rms_value
             min_rms_weight_matrix = weight_matrix
@@ -100,11 +91,9 @@ def calculate_sgd_values(training_data, target_matrix, basis_matrix_training, m)
             current_e_rms = sum_of_squared_errors + (0.5 * numpy.dot(sgd_weight_matrix.T, sgd_weight_matrix))
             current_e_rms /= len(training_data)
             current_e_rms = numpy.sqrt(2 * current_e_rms)
-            value = 'lambda:' + str(round(lambda_sgd, 2)) + ' ' + 'learning_rate:' + str(learning_rate) + ' ' + 'E_RMS:' + str(current_e_rms) + 'iteration_no:' + str(no_of_iteration) + ' ' + 'M:' + str(m)
-            # print(value)
+
             no_of_iteration += 1
-            with open('SGD_Observations_synthetic.txt', "a") as fw:
-                fw.write('lambda_sgd:' + str(round(lambda_sgd,2)) + ',' + 'ERMS:' + str(current_e_rms) + ',' + 'M:' + str(m)+'\n')
+
             if no_of_iteration > 50:
                 break
             if current_e_rms < minimum_e_rms:
